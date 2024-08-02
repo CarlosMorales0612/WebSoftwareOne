@@ -1,0 +1,63 @@
+          <!-- Mensajes de error/success -->
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        
+
+
+<div class="container mt-4">
+  <button type="button" class="btn btn-primary" (click)="openCreateTask()">Crear Nueva Tarea</button>
+
+  <div class="row mt-3">
+    <div class="col-sm-12">
+      <p-table #dt [value]="listAllTasks" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]" 
+      [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tarea</th>
+            <th>Descripción</th>
+            <th>Fecha Creación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.titleTask }}</td>
+            <td>{{ task.descriptionTask }}</td>
+            <td>{{ task.creationTask | date:'short' }}</td>
+            <td>
+              <span [ngClass]="getStatusClass(task.completedTask)">
+                {{ getStatusInfo(task.completedTask).name }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary m-1" (click)="openUpdateTask(task)">
+                <i class="fa-solid fa-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger m-1" (click)="openDeleteTask(task)">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal de crear tarea -->
+<app-create-task (eventTaskCreate)="LoadAllTasks()" (eventTaskCreate)="handleTaskUpdate($event)"></app-create-task>
+
+<!-- Modal de editar tarea, debe abrirse solo cuando se selecciona una tarea para editar -->
+<app-edit-task [taskToEdit]="selectedTask" (taskUpdated)="handleTaskUpdate($event)"></app-edit-task>
+
+<!-- Usa el componente DeleteTaskComponent y escucha el evento -->
+<app-delete-task [selectedDeleteTask] ="selectedTask" (eventDeleteTask)="handleTaskUpdate($event)"></app-delete-task>
+
+
+
+
+
+

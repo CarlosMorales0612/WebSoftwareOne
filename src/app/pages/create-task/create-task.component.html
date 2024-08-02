@@ -1,0 +1,65 @@
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Crear Nueva Tarea</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="taskForm">
+          <!-- campo title -->
+          <div class="form-group">
+            <label for="titleTask">Título</label>
+            <input id="titleTask" formControlName="titleTask" class="form-control"
+              placeholder="Ingrese el título de la tarea" />
+            <div *ngIf="
+                taskForm.controls['titleTask'].invalid &&
+                (taskForm.controls['titleTask'].dirty ||
+                  taskForm.controls['titleTask'].touched)
+              " class="text-danger">
+              <div *ngIf="taskForm.controls['titleTask'].errors?.['required']">
+                El título es obligatorio.
+              </div>
+              <div *ngIf="taskForm.controls['titleTask'].errors?.['minlength']">
+                El título debe tener al menos 5 caracteres.
+              </div>
+              <div *ngIf="taskForm.controls['titleTask'].errors?.['maxlength']">
+                El título debe tener un máximo de 10 caracteres.
+              </div>
+            </div>
+          </div>
+          
+
+          <!-- campo Descripción -->
+          <div class="form-group mt-3">
+            <label for="descriptionTask">Descripción</label>
+            <textarea id="descriptionTask" formControlName="descriptionTask" class="form-control"
+              placeholder="Ingrese la descripción de la tarea" rows="3"></textarea>
+            <div *ngIf="
+                taskForm.controls['descriptionTask'].invalid &&
+                (taskForm.controls['descriptionTask'].dirty ||
+                  taskForm.controls['descriptionTask'].touched)
+              " class="text-danger">
+              <div *ngIf="taskForm.controls['descriptionTask'].errors?.['required']">
+                La descripción es obligatoria.
+              </div>
+              <div *ngIf="taskForm.controls['descriptionTask'].errors?.['maxlength']">
+                El título debe tener al menos 10 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <!-- campo fecha -->
+          <div class="form-group mt-3">
+            <label for="creationTask">Fecha de Creación</label>
+            <input id="creationTask" formControlName="creationTask" class="form-control" type="date" readonly />
+          </div>
+
+          <button type="submit" class="btn btn-success mt-3" [disabled]="taskForm.invalid" (click)="loadNewTask()">
+            Crear Tarea
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

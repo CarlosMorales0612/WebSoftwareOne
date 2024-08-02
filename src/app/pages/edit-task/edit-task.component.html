@@ -1,0 +1,86 @@
+<!-- Modal de editar tarea -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editTaskModalLabel">Editar Tarea</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+            
+          <form [formGroup]="updateTaskForm">
+              <!-- Mensaje de error global -->
+              <div *ngIf="!updateTaskForm.valid" class="text-danger mb-3">
+                Por favor, complete todos los campos requeridos.
+              </div>
+            <!-- campo title -->
+            <div class="mb-3">
+              <label for="titleTask" class="form-label">Título</label>
+              <input id="titleTask" formControlName="titleTask" class="form-control" readonly
+                placeholder="Ingrese el título de la tarea" />
+              <div *ngIf="
+                  updateTaskForm.controls['titleTask'].invalid &&
+                  (updateTaskForm.controls['titleTask'].dirty ||
+                    updateTaskForm.controls['titleTask'].touched)
+                " class="text-danger">
+                <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['required']">
+                  El título es obligatorio.
+                </div>
+                <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['maxlength']">
+                  El título debe tener al menos 5 caracteres.
+                </div>
+              </div>
+            </div>
+  
+            <!-- campo Descripción -->
+            <div class="mb-3">
+              <label for="descriptionTask" class="form-label">Descripción</label>
+              <textarea id="descriptionTask" formControlName="descriptionTask" class="form-control"
+                placeholder="Ingrese la descripción de la tarea" rows="3"></textarea>
+              <div *ngIf="
+                  updateTaskForm.controls['descriptionTask'].invalid &&
+                  (updateTaskForm.controls['descriptionTask'].dirty ||
+                    updateTaskForm.controls['descriptionTask'].touched)
+                " class="text-danger">
+                <div *ngIf="updateTaskForm.controls['descriptionTask'].errors?.['required']">
+                  La descripción es obligatoria.
+                </div>
+                <div *ngIf="updateTaskForm.controls['descriptionTask'].errors?.['maxlength']">
+                  La descripción no puede exceder los 10 caracteres.
+                </div>
+              </div>
+            </div>
+  
+            <!-- campo fecha -->
+            <div class="mb-3">
+              <label for="creationTask" class="form-label">Fecha de Creación</label>
+              <input id="creationTask" formControlName="creationTask" class="form-control" type="date" readonly />
+            </div>
+            
+            <!-- campo completada usando p-selectButton -->
+            <div class="mb-3">
+                <label for="completedTask" class="form-label">Estado Tarea</label>
+                <p-selectButton 
+                  [options]="stateOptions" 
+                  formControlName="completedTask" 
+                  optionLabel="label" 
+                  optionValue="value" 
+                  styleClass="w-full">
+                </p-selectButton>
+              </div>
+  
+            <!-- <div class="mb-3 form-check">
+                <input id="completedTask" formControlName="completedTask" class="form-check-input" type="checkbox" />
+            <label for="completedTask" class="form-check-label">{{ updateTaskForm.get('completedTask')?.value ? 'Completada' : 'Pendiente' }}</label>
+              </div> -->
+       
+  
+              <button type="button" class="btn-update-task" [disabled]="updateTaskForm.invalid" (click)="onUpdateTask()">
+                Actualizar Tarea
+              </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

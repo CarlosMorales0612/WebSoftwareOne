@@ -1,0 +1,44 @@
+/* Estilo para el botón de actualización de tarea */
+.btn-update-task {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff; /* Fondo azul */
+    color: white; /* Texto blanco */
+    border: none;
+    border-radius: 0.5rem; /* Bordes redondeados */
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-update-task:hover {
+    background-color: #0056b3; /* Fondo azul oscuro en hover */
+  }
+  
+  .btn-update-task:active {
+    transform: scale(0.98); /* Efecto de presión */
+  }
+  
+
+  /* Estilos para el contenedor del checkbox */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Ajusta el espaciado inferior según sea necesario */
+  }
+  
+  /* Estilos para el checkbox */
+  .form-check-input {
+    margin-right: 0.5rem; /* Espacio entre el checkbox y la etiqueta */
+  }
+  
+  /* Estilos para la etiqueta del checkbox */
+  .form-check-label {
+    margin-bottom: 0; /* Elimina el margen inferior predeterminado de la etiqueta */
+    font-size: 1rem; /* Ajusta el tamaño de la fuente según sea necesario */
+  }
+  
+  .p-selectbutton {
+    width: 100%; /* Ajustar al ancho completo del contenedor */
+  }

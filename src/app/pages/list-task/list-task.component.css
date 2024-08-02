@@ -1,0 +1,38 @@
+/* td, th {
+    border: 1xp solid #ccc;
+}
+
+thead {
+    background-color: blue;
+    color: white;
+} */
+
+.btn-icon {
+    border: none;
+    border-radius: 0;
+    outline: 2px solid #000000;
+  }
+
+/* button del estado */
+
+.task-status-completed {
+    background-color: #d4edda; /* Fondo verde claro */
+    color: #155724; /* Texto verde oscuro */
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem; /* Bordes redondeados */
+  }
+  
+  .task-status-pending {
+    background-color: #f8d7da; /* Fondo rojo claro */
+    color: #721c24; /* Texto rojo oscuro */
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem; /* Bordes redondeados */
+  }
+  
+  .task-status-overdue {
+    background-color: #d1ecf1; /* Fondo azul claro */
+    color: #0c5460; /* Texto azul oscuro */
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem; /* Bordes redondeados */
+  }
+  
