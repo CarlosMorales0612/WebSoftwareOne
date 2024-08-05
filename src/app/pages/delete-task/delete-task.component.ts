@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DataTablesModule } from 'angular-datatables';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -20,7 +19,6 @@ import { ListTaskComponent } from '../list-task/list-task.component';
   standalone: true,
   imports: [
     CommonModule,
-    DataTablesModule,
     CreateTaskComponent,
     EditTaskComponent,
     ListTaskComponent,

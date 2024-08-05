@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, computed, effect, EventEmitter, OnInit, Output, signal, ViewChild, WritableSignal } from '@angular/core';
 import { TastsService } from '../../services/tasts.service';
 import { TaskModel } from '../../models/taskModel';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DataTablesModule } from 'angular-datatables';
 import { CreateTaskComponent } from '../create-task/create-task.component';
 import { EditTaskComponent } from '../edit-task/edit-task.component'; 
 import { TableModule } from 'primeng/table'; 
@@ -14,6 +13,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog'; 
 import { ToastModule } from 'primeng/toast';
 import { DeleteTaskComponent } from "../delete-task/delete-task.component";
+import { TaskSignalServiceService } from '../../services/task-signal-service.service';
 
 
 @Component({
@@ -21,7 +21,6 @@ import { DeleteTaskComponent } from "../delete-task/delete-task.component";
   standalone: true,
   imports: [
     CommonModule,
-    DataTablesModule,
     CreateTaskComponent,
     EditTaskComponent,
     TableModule,
@@ -38,27 +37,55 @@ import { DeleteTaskComponent } from "../delete-task/delete-task.component";
 })
 export class ListTaskComponent implements OnInit {
 
-  listAllTasks: TaskModel[] = [];
+  listAllTasks = signal<TaskModel[]>([]);
   selectedTask: TaskModel | null = null;
-  data : TaskModel [] = [];
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+  taskCreatedSignal = this.taskSignalService.getTaskCreatedSignal();
 
-
-  constructor(private service: TastsService, private router: Router,
+  successMessage = computed(() => {
+    const taskCreated = this.taskCreatedSignal();
+    return taskCreated?.success ? taskCreated.message : null;
+  });
+  
+  errorMessage = computed(() => {
+    const taskCreated = this.taskCreatedSignal();
+    return taskCreated && !taskCreated.success ? taskCreated.message : null;
+  });
+  constructor(
+    private service: TastsService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
-   ) {}
-
+    private taskSignalService: TaskSignalServiceService
+  ) {
+    effect(() => {
+      const successMessage = this.successMessage();
+      const errorMessage = this.errorMessage();
+    
+      if (successMessage) {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: successMessage });
+        setTimeout(() => {
+          this.messageService.clear();
+          this.LoadAllTasks();
+          // Aquí podrías intentar también restablecer el mensaje de éxito
+          this.taskSignalService.setTaskCreatedSignal(null);
+        }, 1000);
+      }
+    
+      if (errorMessage) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
+        setTimeout(() => this.messageService.clear(), 1000);
+      }
+    });
+    
+  }
+  
   ngOnInit(): void {
-    this.LoadAllTasks(); // Método para cargar todas las tareas
+    this.LoadAllTasks();
+
   }
 
-  // Cargar todas las tareas
   LoadAllTasks(): void {
     this.service.getAllTasks().subscribe(
       (data: TaskModel[]) => {
-        this.listAllTasks = data;
+        this.listAllTasks.set(data);
       },
       (error) => {
         console.error('Error al cargar las tareas', error);
@@ -66,7 +93,6 @@ export class ListTaskComponent implements OnInit {
     );
   }
 
-  // Abrir el modal de creación de tarea
   openCreateTask(): void {
     const createTaskModal = document.getElementById('taskModal');
     if (createTaskModal) {
@@ -75,7 +101,6 @@ export class ListTaskComponent implements OnInit {
     }
   }
 
-  // Abrir el modal de edición de tarea
   openUpdateTask(task: TaskModel): void {
     this.selectedTask = task;
     const editTaskModal = document.getElementById('editTaskModal');
@@ -85,43 +110,29 @@ export class ListTaskComponent implements OnInit {
     }
   }
 
-    // Abrir el modal de edición de tarea
-    openDeleteTask(task: TaskModel): void {
-      this.selectedTask = task;
-      const deleteTaskModal = document.getElementById('deleteTaskModal');
-      if (deleteTaskModal) {
-        const bsModal = (window as any).bootstrap.Modal.getInstance(deleteTaskModal) || new (window as any).bootstrap.Modal(deleteTaskModal);
-        bsModal.show();
-      }
+  openDeleteTask(task: TaskModel): void {
+    this.selectedTask = task;
+    const deleteTaskModal = document.getElementById('deleteTaskModal');
+    if (deleteTaskModal) {
+      const bsModal = (window as any).bootstrap.Modal.getInstance(deleteTaskModal) || new (window as any).bootstrap.Modal(deleteTaskModal);
+      bsModal.show();
     }
-  
-  // Obtener la clase de estado para las tareas
+  }
+
   getStatusClass(completed: boolean): string {
     return completed ? 'task-status-completed' : 'task-status-pending';
   }
 
-  // Obtener la información del estado de la tarea
   getStatusInfo(completed: boolean): { name: string, color: string } {
     return completed ? 
       { name: 'Completada', color: 'green' } :
       { name: 'Pendiente', color: 'red' };
   }
 
-  // Manejar la actualización de tareas
-  handleTaskUpdate(event: { success: boolean, message: string }): void {
-    if (event.success) {
-      this.successMessage = event.message;
-      this.errorMessage = null;
-      setTimeout(() => this.successMessage = null, 5000); // Limpia el mensaje después de 5 segundos
-      this.LoadAllTasks(); // Recargar la lista de tareas
-    } else {
-      this.errorMessage = event.message;
-      this.successMessage = null;
-      setTimeout(() => this.errorMessage = null, 5000); // Limpia el mensaje después de 5 segundos
-    }
-  }
 
- 
-  
 
 }
+
+  
+
+

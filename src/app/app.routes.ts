@@ -8,6 +8,6 @@ export const routes: Routes = [
     {path : 'listTasks', component: ListTaskComponent},
     {path: 'createTask', component: CreateTaskComponent},
     {path: 'updateTask', component: EditTaskComponent},
-    {path: '**', redirectTo: '/listTasks'}
+    {path: '**', pathMatch: 'full', redirectTo: '/listTasks'}
 
 ];

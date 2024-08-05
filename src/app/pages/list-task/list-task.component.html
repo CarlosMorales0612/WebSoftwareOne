@@ -1,16 +1,23 @@
-          <!-- Mensajes de error/success -->
-          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-        
-
-
+<!-- En list-task.component.html -->
 <div class="container mt-4">
+  <!-- Botón para abrir el modal de crear tarea -->
   <button type="button" class="btn btn-primary" (click)="openCreateTask()">Crear Nueva Tarea</button>
 
+  <!-- Mensajes de éxito y error -->
+  <div class="alert-container mt-3">
+    <div *ngIf="successMessage()" class="alert alert-success">
+      {{ successMessage() }}
+    </div>
+    <div *ngIf="errorMessage()" class="alert alert-danger">
+      {{ errorMessage() }}
+    </div>
+  </div>
+
+  <!-- Tabla de tareas -->
   <div class="row mt-3">
     <div class="col-sm-12">
-      <p-table #dt [value]="listAllTasks" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]" 
-      [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
+      <p-table #dt [value]="listAllTasks()" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
         <ng-template pTemplate="header">
           <tr>
             <th>Tarea</th>
@@ -24,7 +31,7 @@
           <tr>
             <td>{{ task.titleTask }}</td>
             <td>{{ task.descriptionTask }}</td>
-            <td>{{ task.creationTask | date:'short' }}</td>
+            <td>{{ task.creationTask | date: 'dd/MM/yyyy' }}</td>
             <td>
               <span [ngClass]="getStatusClass(task.completedTask)">
                 {{ getStatusInfo(task.completedTask).name }}
@@ -45,19 +52,11 @@
   </div>
 </div>
 
-
-
 <!-- Modal de crear tarea -->
-<app-create-task (eventTaskCreate)="LoadAllTasks()" (eventTaskCreate)="handleTaskUpdate($event)"></app-create-task>
+<app-create-task></app-create-task>
 
 <!-- Modal de editar tarea, debe abrirse solo cuando se selecciona una tarea para editar -->
-<app-edit-task [taskToEdit]="selectedTask" (taskUpdated)="handleTaskUpdate($event)"></app-edit-task>
+<app-edit-task [taskToEdit]="selectedTask"></app-edit-task>
 
-<!-- Usa el componente DeleteTaskComponent y escucha el evento -->
-<app-delete-task [selectedDeleteTask] ="selectedTask" (eventDeleteTask)="handleTaskUpdate($event)"></app-delete-task>
-
-
-
-
-
-
+<!-- Modal de eliminar tarea -->
+<app-delete-task [selectedDeleteTask]="selectedTask"></app-delete-task>
