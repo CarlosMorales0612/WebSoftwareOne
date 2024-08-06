@@ -13,6 +13,7 @@ import { TastsService } from '../../services/tasts.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ListTaskComponent } from '../list-task/list-task.component';
+import { TaskSignalServiceService } from '../../services/task-signal-service.service';
 
 @Component({
   selector: 'app-delete-task',
@@ -35,16 +36,14 @@ import { ListTaskComponent } from '../list-task/list-task.component';
 export class DeleteTaskComponent {
 
   listAllTasks: TaskModel[] = [];
+  selectedTask: TaskModel | null = null;
   data : TaskModel [] = [];
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
-  @Input() selectedDeleteTask: TaskModel | null = null;
-  @Output() eventDeleteTask = new EventEmitter<{ success: boolean, message: string }>();
-  
+
 
   constructor(private service: TastsService, private router: Router,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private taskSignalService: TaskSignalServiceService
    ) {}
 
    closeModal(): void {
@@ -60,25 +59,24 @@ export class DeleteTaskComponent {
   // Confirmar eliminación de la tarea
   
   confirmDelete(): void {
-    if (this.selectedDeleteTask && this.selectedDeleteTask.titleTask) {
-      this.service.deleteTaskByTitle(this.selectedDeleteTask.titleTask).subscribe(
-        (response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Tarea eliminada',
-            detail: 'La tarea fue eliminada con éxito',
-            life: 2000
-          });
-          this.eventDeleteTask.emit({ success: true, message: 'Tarea eliminada exitosamente' });
-          this.closeModal();
+    const taskToDelete = this.taskSignalService.getSelectedDeleteTaskSignal()();
+    if (taskToDelete) {
+      this.service.deleteTaskByTitle(taskToDelete.titleTask).subscribe(
+        () => {
+          this.taskSignalService.setTaskDeletedSignal({ success: true, message: 'Tarea eliminada exitosamente' });
+          this.taskSignalService.setHidenMessage(true);
+          this.closeModal(); 
         },
         (error) => {
-          console.error('Error al eliminar la tarea', error);
-          this.errorMessage = error.error?.message || 'Error desconocido al eliminar la tarea.';
+          this.taskSignalService.setTaskDeletedSignal({ success: false, message: 'Error al eliminar la tarea' });
+          this.taskSignalService.setHidenMessage(true);
+          this.closeModal(); 
         }
       );
     }
   }
+  
+  
 }
 
   

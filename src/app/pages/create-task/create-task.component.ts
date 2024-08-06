@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 export class CreateTaskComponent implements OnInit {
 
   taskForm: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private taskService: TastsService,
@@ -28,8 +29,8 @@ export class CreateTaskComponent implements OnInit {
     private taskSignalService: TaskSignalServiceService
   ) {
     this.taskForm = this.fb.group({
-      titleTask: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
-      descriptionTask: ['', [Validators.required, Validators.maxLength(10)]],
+      titleTask: ['', [Validators.required, Validators.maxLength(100), Validators.minLength(4)]],
+      descriptionTask: ['', [Validators.required, Validators.maxLength(200)]],
       creationTask: [new Date().toISOString().split('T')[0], Validators.required],
       completedTask: [false]
     });
@@ -66,6 +67,7 @@ export class CreateTaskComponent implements OnInit {
       this.taskService.createTask(newTask).subscribe(
         () => {
           this.taskSignalService.setTaskCreatedSignal({ success: true, message: 'Tarea creada exitosamente' });
+          this.taskSignalService.setHidenMessage(true);
           this.closeModal();
         },
         (error) => {
@@ -74,6 +76,7 @@ export class CreateTaskComponent implements OnInit {
       );
     }
   }
+
   resetForm(): void {
     this.taskForm.reset({
       titleTask: '',

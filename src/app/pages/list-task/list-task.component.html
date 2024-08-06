@@ -5,8 +5,16 @@
 
   <!-- Mensajes de éxito y error -->
   <div class="alert-container mt-3">
-    <div *ngIf="successMessage()" class="alert alert-success">
-      {{ successMessage() }}
+    <div *ngIf="showMessage()" class="alert alert-success">
+      <span *ngIf="successMessage()?.success" >
+        {{successMessage()?.message}}
+      </span>
+      <span *ngIf="successMessageEdit()?.success">
+        {{successMessageEdit()?.message}}
+      </span>
+      <span *ngIf="successMessageDelete()?.success" >
+        {{successMessageDelete()?.message}}
+      </span>
     </div>
     <div *ngIf="errorMessage()" class="alert alert-danger">
       {{ errorMessage() }}
@@ -56,7 +64,7 @@
 <app-create-task></app-create-task>
 
 <!-- Modal de editar tarea, debe abrirse solo cuando se selecciona una tarea para editar -->
-<app-edit-task [taskToEdit]="selectedTask"></app-edit-task>
+<app-edit-task ></app-edit-task>
 
 <!-- Modal de eliminar tarea -->
-<app-delete-task [selectedDeleteTask]="selectedTask"></app-delete-task>
+<app-delete-task></app-delete-task>

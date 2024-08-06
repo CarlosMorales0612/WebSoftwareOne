@@ -16,6 +16,7 @@ import { DeleteTaskComponent } from "../delete-task/delete-task.component";
 import { TaskSignalServiceService } from '../../services/task-signal-service.service';
 
 
+
 @Component({
   selector: 'app-list-task',
   standalone: true,
@@ -39,53 +40,80 @@ export class ListTaskComponent implements OnInit {
 
   listAllTasks = signal<TaskModel[]>([]);
   selectedTask: TaskModel | null = null;
+
+  @ViewChild(EditTaskComponent) editTaskComponent!: EditTaskComponent;
+
   taskCreatedSignal = this.taskSignalService.getTaskCreatedSignal();
+  taskEditSignal = this.taskSignalService.getTaskEditSignal();
+  taskDeleteSignal = this.taskSignalService.getTaskDeletedSignal();
+
+
+  showMessage = computed(() => {
+    const successMessageShow = this.taskSignalService.getHidenMessage();
+    const isVisible = successMessageShow();
+    return isVisible;
+  });
 
   successMessage = computed(() => {
     const taskCreated = this.taskCreatedSignal();
-    return taskCreated?.success ? taskCreated.message : null;
+    this.LoadAllTasks();
+    return taskCreated?.success ? taskCreated : null;
   });
   
   errorMessage = computed(() => {
     const taskCreated = this.taskCreatedSignal();
     return taskCreated && !taskCreated.success ? taskCreated.message : null;
   });
+
+  successMessageEdit = computed(() => {
+    const taskEdited = this.taskEditSignal();
+    this.LoadAllTasks();
+    return taskEdited?.success ? taskEdited : null;
+  });
+
+  errorMessageEdit = computed(() => {
+    const taskEdited = this.taskEditSignal();
+    return taskEdited && !taskEdited.success ? taskEdited.message : null;
+  });
+
+  successMessageDelete = computed(() => {
+    const taskDelete = this.taskDeleteSignal();
+    this.LoadAllTasks();
+    return taskDelete?.success ? taskDelete : null;
+  });
+
+  errorMessageDelete = computed(() => {
+    const taskDelete = this.taskDeleteSignal();
+    return taskDelete && !taskDelete.success ? taskDelete.message : null;
+  });
+
   constructor(
     private service: TastsService,
     private messageService: MessageService,
     private taskSignalService: TaskSignalServiceService
   ) {
-    effect(() => {
-      const successMessage = this.successMessage();
-      const errorMessage = this.errorMessage();
-    
-      if (successMessage) {
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: successMessage });
-        setTimeout(() => {
-          this.messageService.clear();
-          this.LoadAllTasks();
-          // Aquí podrías intentar también restablecer el mensaje de éxito
-          this.taskSignalService.setTaskCreatedSignal(null);
-        }, 1000);
-      }
-    
-      if (errorMessage) {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
-        setTimeout(() => this.messageService.clear(), 1000);
-      }
-    });
     
   }
-  
+
   ngOnInit(): void {
     this.LoadAllTasks();
 
+  }
+
+  resetSignal(): void {
+    this.taskSignalService.setTaskCreatedSignal(null);
+    this.taskSignalService.setTaskEditSignal(null); // Reinicia la señal a null
+    this.taskSignalService.setTaskDeletedSignal(null);
   }
 
   LoadAllTasks(): void {
     this.service.getAllTasks().subscribe(
       (data: TaskModel[]) => {
         this.listAllTasks.set(data);
+        setTimeout(() => {
+          this.taskSignalService.setHidenMessage(false);
+          this.resetSignal();
+        }, 4000);
       },
       (error) => {
         console.error('Error al cargar las tareas', error);
@@ -102,15 +130,23 @@ export class ListTaskComponent implements OnInit {
   }
 
   openUpdateTask(task: TaskModel): void {
+    this.taskSignalService.setSelectedTask(task);
     this.selectedTask = task;
     const editTaskModal = document.getElementById('editTaskModal');
     if (editTaskModal) {
       const bsModal = (window as any).bootstrap.Modal.getInstance(editTaskModal) || new (window as any).bootstrap.Modal(editTaskModal);
       bsModal.show();
+      setTimeout(() => {
+        if (this.editTaskComponent) {
+          this.editTaskComponent.initializeData();
+        }
+      }, 0);
     }
+
   }
 
   openDeleteTask(task: TaskModel): void {
+    this.taskSignalService.setSelectedTask(task);
     this.selectedTask = task;
     const deleteTaskModal = document.getElementById('deleteTaskModal');
     if (deleteTaskModal) {
@@ -118,6 +154,7 @@ export class ListTaskComponent implements OnInit {
       bsModal.show();
     }
   }
+  
 
   getStatusClass(completed: boolean): string {
     return completed ? 'task-status-completed' : 'task-status-pending';

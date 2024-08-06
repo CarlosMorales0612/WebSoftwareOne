@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             
-          <form [formGroup]="updateTaskForm">
+          <form [formGroup]="updateTaskForm" >
               <!-- Mensaje de error global -->
               <div *ngIf="!updateTaskForm.valid" class="text-danger mb-3">
                 Por favor, complete todos los campos requeridos.
@@ -49,8 +49,7 @@
                   La descripción no puede exceder los 10 caracteres.
                 </div>
               </div>
-            </div>
-  
+            </div> 
             <!-- campo fecha -->
             <div class="mb-3">
               <label for="creationTask" class="form-label">Fecha de Creación</label>
