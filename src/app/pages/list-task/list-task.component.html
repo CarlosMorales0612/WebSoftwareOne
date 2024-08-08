@@ -1,23 +1,33 @@
+<p-toast></p-toast>
 <!-- En list-task.component.html -->
 <div class="container mt-4">
   <!-- Botón para abrir el modal de crear tarea -->
-  <button type="button" class="btn btn-primary" (click)="openCreateTask()">Crear Nueva Tarea</button>
+  <button type="button" class="btn btn-primary" (click)="openCreateTask()">
+    Crear Nueva Tarea
+  </button>
 
   <div class="d-flex justify-content-end mb-3">
-    <input type="text" pInputText [(ngModel)]="searchText" (ngModelChange)="filterTasksTitle()" placeholder="Buscar tarea por título..." class="form-control w-50" />
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="searchText"
+      (ngModelChange)="filterTasksTitle()"
+      placeholder="Buscar tarea por título..."
+      class="form-control w-50"
+    />
   </div>
 
   <!-- Mensajes de éxito y error -->
   <div class="alert-container mt-3">
     <div *ngIf="showMessage()" class="alert alert-success">
-      <span *ngIf="successMessage()?.success" >
-        {{successMessage()?.message}}
+      <span *ngIf="successMessage()?.success">
+        {{ successMessage()?.message }}
       </span>
       <span *ngIf="successMessageEdit()?.success">
-        {{successMessageEdit()?.message}}
+        {{ successMessageEdit()?.message }}
       </span>
-      <span *ngIf="successMessageDelete()?.success" >
-        {{successMessageDelete()?.message}}
+      <span *ngIf="successMessageDelete()?.success">
+        {{ successMessageDelete()?.message }}
       </span>
     </div>
     <div *ngIf="errorMessage()" class="alert alert-danger">
@@ -28,8 +38,12 @@
   <!-- Tabla de tareas -->
   <div class="row mt-3">
     <div class="col-sm-12">
-      <p-table #dt [value]="filteredTasks" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]"
+      <p-table
+        #dt
+        [value]="filteredTasks"
+        [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]" 
         [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
+      >
         <ng-template pTemplate="header">
           <tr>
             <th>Tarea</th>
@@ -43,17 +57,25 @@
           <tr>
             <td>{{ task.titleTask }}</td>
             <td>{{ task.descriptionTask }}</td>
-            <td>{{ task.creationTask | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ task.creationTask | date : "dd/MM/yyyy" }}</td>
             <td>
               <span [ngClass]="getStatusClass(task.completedTask)">
                 {{ getStatusInfo(task.completedTask).name }}
               </span>
             </td>
             <td>
-              <button class="btn btn-sm btn-primary m-1" (click)="openUpdateTask(task)">
+              <button
+                class="btn btn-sm btn-primary m-1"
+                (click)="openUpdateTask(task)"
+                pTooltip="Actualizar Tarea"
+              >
                 <i class="fa-solid fa-pencil"></i>
               </button>
-              <button class="btn btn-sm btn-danger m-1" (click)="openDeleteTask(task)">
+              <button
+                class="btn btn-sm btn-danger m-1"
+                (click)="openDeleteTask(task)"
+                pTooltip="Eliminar Tarea"
+              >
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </td>
@@ -68,7 +90,7 @@
 <app-create-task></app-create-task>
 
 <!-- Modal de editar tarea, debe abrirse solo cuando se selecciona una tarea para editar -->
-<app-edit-task ></app-edit-task>
+<app-edit-task></app-edit-task>
 
 <!-- Modal de eliminar tarea -->
 <app-delete-task></app-delete-task>

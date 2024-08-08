@@ -26,8 +26,11 @@
                 <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['required']">
                   El título es obligatorio.
                 </div>
-                <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['maxlength']">
-                  El título debe tener al menos 5 caracteres.
+                <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['minlength']">
+                  El título debe tener al menos 3 caracteres.
+                </div>
+                <div *ngIf="updateTaskForm.controls['titleTask'].errors?.['minlength']">
+                  El título no debe tener mas de 250 caracteres.
                 </div>
               </div>
             </div>

@@ -14,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { DeleteTaskComponent } from "../delete-task/delete-task.component";
 import { TaskSignalServiceService } from '../../services/task-signal-service.service';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 
@@ -31,19 +32,21 @@ import { FormsModule } from '@angular/forms';
     ConfirmDialogModule,
     ToastModule,
     DeleteTaskComponent,
-    FormsModule
+    FormsModule,
+    TooltipModule,
 ],
   templateUrl: './list-task.component.html',
   styleUrls: ['./list-task.component.css'],
   providers: [MessageService, ConfirmationService]
 })
 export class ListTaskComponent implements OnInit {
+  
   searchText: string = '';
   listAllTasks = signal<TaskModel[]>([]);
   selectedTask: TaskModel | null = null;
   filteredTasks: TaskModel[] = []; 
-  
 
+  
   @ViewChild(EditTaskComponent) editTaskComponent!: EditTaskComponent;
 
   taskCreatedSignal = this.taskSignalService.getTaskCreatedSignal();
@@ -110,7 +113,7 @@ export class ListTaskComponent implements OnInit {
   }
 
   filterTasksTitle(){
-    const searchTextLower = this.searchText.toLowerCase();
+    const searchTextLower = this.searchText.trim().toLowerCase();
     this.filteredTasks = this.listAllTasks().filter(searchTask => 
       searchTask.titleTask.toLowerCase().includes(searchTextLower)
     )

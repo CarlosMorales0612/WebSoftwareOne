@@ -29,8 +29,8 @@ export class CreateTaskComponent implements OnInit {
     private taskSignalService: TaskSignalServiceService
   ) {
     this.taskForm = this.fb.group({
-      titleTask: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
-      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(40)]],
+      titleTask: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(250)]],
       creationTask: [new Date().toISOString().split('T')[0], Validators.required],
       completedTask: [false]
     });

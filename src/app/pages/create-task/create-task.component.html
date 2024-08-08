@@ -23,10 +23,10 @@
                 El título es obligatorio.
               </div>
               <div *ngIf=" taskForm.controls['titleTask'].errors?.['minlength']">
-                El título debe tener al menos 5 caracteres.
+                El título debe tener al menos 3 caracteres.
               </div>
               <div *ngIf=" taskForm.controls['titleTask'].errors?.['maxlength']">
-                El título debe tener un máximo de 10 caracteres.
+                El título debe tener un máximo de 100 caracteres.
               </div>
 
             </div>
@@ -42,12 +42,16 @@
             taskForm.controls['descriptionTask'].invalid &&
                 ( taskForm.controls['descriptionTask'].dirty ||
                 taskForm.controls['descriptionTask'].touched)
-              " class="text-danger">
+              " class="text-danger"
+              (blur)="espaceWhite('descriptionTask')">
               <div *ngIf=" taskForm.controls['descriptionTask'].errors?.['required']">
                 La descripción es obligatoria.
               </div>
+              <div *ngIf=" taskForm.controls['descriptionTask'].errors?.['minlength']">
+                El título debe tener al menos 3 caracteres.
+              </div>
               <div *ngIf=" taskForm.controls['descriptionTask'].errors?.['maxlength']">
-                El título debe tener al menos 10 caracteres.
+                El título no debe tener al mas de 250 caracteres.
               </div>
             </div>
           </div>

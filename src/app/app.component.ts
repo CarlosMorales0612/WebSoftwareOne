@@ -4,10 +4,12 @@ import { CreateTaskComponent } from "./pages/create-task/create-task.component";
 
 
 
+
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CreateTaskComponent],
+  imports: [RouterOutlet, CreateTaskComponent ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

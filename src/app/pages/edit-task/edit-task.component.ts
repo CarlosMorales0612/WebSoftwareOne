@@ -47,8 +47,8 @@ export class EditTaskComponent implements OnInit {
     private taskSignalService: TaskSignalServiceService
   ) {
     this.updateTaskForm = this.fb.group({
-      titleTask: ['', [Validators.required,Validators.minLength(3), Validators.maxLength(25)]],
-      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(40)]],
+      titleTask: ['', [Validators.required,Validators.minLength(3), Validators.maxLength(100)]],
+      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(250)]],
       creationTask: [{ value: '', disabled: true }, Validators.required],
       completedTask: [false],
     });
@@ -58,7 +58,7 @@ export class EditTaskComponent implements OnInit {
   initializeData(): void {
     const taskSignal = this.taskSignalService.getSelectedTaskSignal();
     const taskSelect = taskSignal();
-    console.log('datos', taskSelect);
+    
 
     if (taskSelect) {
       this.updateTaskForm.patchValue({
