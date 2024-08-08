@@ -29,8 +29,8 @@ export class CreateTaskComponent implements OnInit {
     private taskSignalService: TaskSignalServiceService
   ) {
     this.taskForm = this.fb.group({
-      titleTask: ['', [Validators.required, Validators.maxLength(100), Validators.minLength(4)]],
-      descriptionTask: ['', [Validators.required, Validators.maxLength(200)]],
+      titleTask: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(40)]],
       creationTask: [new Date().toISOString().split('T')[0], Validators.required],
       completedTask: [false]
     });
@@ -87,4 +87,11 @@ export class CreateTaskComponent implements OnInit {
   }
 
   
+espaceWhite(controlTitle: string): void {
+  const titleTaskEspace = this.taskForm.get(controlTitle);
+  if (titleTaskEspace && titleTaskEspace.value) {
+    titleTaskEspace.setValue(titleTaskEspace.value.trim());
+  }
+}
+
 }

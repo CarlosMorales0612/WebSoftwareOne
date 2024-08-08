@@ -3,6 +3,10 @@
   <!-- Botón para abrir el modal de crear tarea -->
   <button type="button" class="btn btn-primary" (click)="openCreateTask()">Crear Nueva Tarea</button>
 
+  <div class="d-flex justify-content-end mb-3">
+    <input type="text" pInputText [(ngModel)]="searchText" (ngModelChange)="filterTasksTitle()" placeholder="Buscar tarea por título..." class="form-control w-50" />
+  </div>
+
   <!-- Mensajes de éxito y error -->
   <div class="alert-container mt-3">
     <div *ngIf="showMessage()" class="alert alert-success">
@@ -24,7 +28,7 @@
   <!-- Tabla de tareas -->
   <div class="row mt-3">
     <div class="col-sm-12">
-      <p-table #dt [value]="listAllTasks()" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]"
+      <p-table #dt [value]="filteredTasks" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,15]"
         [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
         <ng-template pTemplate="header">
           <tr>

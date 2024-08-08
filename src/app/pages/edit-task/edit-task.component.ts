@@ -47,8 +47,8 @@ export class EditTaskComponent implements OnInit {
     private taskSignalService: TaskSignalServiceService
   ) {
     this.updateTaskForm = this.fb.group({
-      titleTask: ['', [Validators.required, Validators.maxLength(100)]],
-      descriptionTask: ['', [Validators.required, Validators.maxLength(200)]],
+      titleTask: ['', [Validators.required,Validators.minLength(3), Validators.maxLength(25)]],
+      descriptionTask: ['', [Validators.required, Validators.minLength(3),Validators.maxLength(40)]],
       creationTask: [{ value: '', disabled: true }, Validators.required],
       completedTask: [false],
     });

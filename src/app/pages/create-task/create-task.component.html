@@ -8,11 +8,12 @@
       <div class="modal-body">
         <form [formGroup]="taskForm">
           <!-- campo title -->
-           
+
           <div class="form-group">
             <label for="titleTask">Título</label>
             <input id="titleTask" formControlName="titleTask" class="form-control"
-              placeholder="Ingrese el título de la tarea" />
+              placeholder="Ingrese el título de la tarea"
+              (blur)="espaceWhite('titleTask')" />
             <div *ngIf="
                 taskForm.controls['titleTask'].invalid &&
                 ( taskForm.controls['titleTask'].dirty ||
@@ -27,9 +28,10 @@
               <div *ngIf=" taskForm.controls['titleTask'].errors?.['maxlength']">
                 El título debe tener un máximo de 10 caracteres.
               </div>
+
             </div>
           </div>
-          
+
 
           <!-- campo Descripción -->
           <div class="form-group mt-3">

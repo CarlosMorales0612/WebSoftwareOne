@@ -1,7 +1,6 @@
 import { Component, computed, effect, EventEmitter, OnInit, Output, signal, ViewChild, WritableSignal } from '@angular/core';
 import { TastsService } from '../../services/tasts.service';
 import { TaskModel } from '../../models/taskModel';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CreateTaskComponent } from '../create-task/create-task.component';
 import { EditTaskComponent } from '../edit-task/edit-task.component'; 
@@ -14,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { DeleteTaskComponent } from "../delete-task/delete-task.component";
 import { TaskSignalServiceService } from '../../services/task-signal-service.service';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -30,16 +30,19 @@ import { TaskSignalServiceService } from '../../services/task-signal-service.ser
     InputSwitchModule,
     ConfirmDialogModule,
     ToastModule,
-    DeleteTaskComponent
+    DeleteTaskComponent,
+    FormsModule
 ],
   templateUrl: './list-task.component.html',
   styleUrls: ['./list-task.component.css'],
   providers: [MessageService, ConfirmationService]
 })
 export class ListTaskComponent implements OnInit {
-
+  searchText: string = '';
   listAllTasks = signal<TaskModel[]>([]);
   selectedTask: TaskModel | null = null;
+  filteredTasks: TaskModel[] = []; 
+  
 
   @ViewChild(EditTaskComponent) editTaskComponent!: EditTaskComponent;
 
@@ -106,10 +109,19 @@ export class ListTaskComponent implements OnInit {
     this.taskSignalService.setTaskDeletedSignal(null);
   }
 
+  filterTasksTitle(){
+    const searchTextLower = this.searchText.toLowerCase();
+    this.filteredTasks = this.listAllTasks().filter(searchTask => 
+      searchTask.titleTask.toLowerCase().includes(searchTextLower)
+    )
+   }
+  
+
   LoadAllTasks(): void {
     this.service.getAllTasks().subscribe(
       (data: TaskModel[]) => {
         this.listAllTasks.set(data);
+        this.filteredTasks = data;
         setTimeout(() => {
           this.taskSignalService.setHidenMessage(false);
           this.resetSignal();
@@ -165,7 +177,6 @@ export class ListTaskComponent implements OnInit {
       { name: 'Completada', color: 'green' } :
       { name: 'Pendiente', color: 'red' };
   }
-
 
 
 }
